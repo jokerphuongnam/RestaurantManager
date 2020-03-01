@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1076062157295",
+    "firebase_url": "https://restaurantmanager-c5183.firebaseio.com",
+    "project_id": "restaurantmanager-c5183",
+    "storage_bucket": "restaurantmanager-c5183.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076062157295:android:380ef3612c99a7573e1e1a",
+        "android_client_info": {
+          "package_name": "com.example.restaurantmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076062157295-lpfbevgimrm9ejeg9jiadp2rvp1h1gvb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.restaurantmanager",
+            "certificate_hash": "0824d01344c2b692497a9bb135177944a4586505"
+          }
+        },
+        {
+          "client_id": "1076062157295-k5u076d19tsmmuskba94kdfoousuv3ft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlb-zZkuks0AY9Wa2V6hVLvfny3yoNUhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076062157295-k5u076d19tsmmuskba94kdfoousuv3ft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

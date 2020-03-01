@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RestaurantManager</string>
+    <string name="add_food">Add food</string>
+    <string name="describle">Describle</string>
+    <string name="amount">Amount</string>
+    <string name="price">Price</string>
+    <string name="name">Name</string>
+</resources>
