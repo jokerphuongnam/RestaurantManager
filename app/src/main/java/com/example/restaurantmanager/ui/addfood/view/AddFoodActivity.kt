@@ -41,7 +41,7 @@ class AddFoodActivity : AppCompatActivity() {
                 if (it == true) {
                     setResult(Activity.RESULT_OK, Intent().putExtra(NAME_FOOD_ADD, foodToAdd.name))
                     finish()
-                } else
+                } else if (it == false)
                     Toast.makeText(applicationContext, "Cannot add food", Toast.LENGTH_SHORT).show()
             })
         }
@@ -77,8 +77,7 @@ class AddFoodActivity : AppCompatActivity() {
     }
     private val cancelAction: View.OnClickListener by lazy {
         View.OnClickListener {
-            setResult(Activity.RESULT_CANCELED)
-            finish()
+            onBackPressed()
         }
     }
 

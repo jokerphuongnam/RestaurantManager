@@ -31,8 +31,8 @@ class AddFoodViewModel : ViewModel() {
         }
     }
 
-    fun nameEmpty(): Boolean = foodToAdd.name?.isEmpty()!!
+    fun nameEmpty() = foodToAdd.name?.isEmpty()!!
     fun priceEmpty() = price.isEmpty()
     fun amountEmpty() = amount.isEmpty()
-    fun describleEmpty(): Boolean = foodToAdd.describle?.isEmpty()!!
+    fun describleEmpty() = foodToAdd.describle?.isEmpty()!!
 }

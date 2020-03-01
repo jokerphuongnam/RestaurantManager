@@ -85,6 +85,7 @@ class ShowFoodActivity : AppCompatActivity() {
                 list?.set(from, list[to].also {
                     list[to] = list[from]
                 })
+                showFoodAdapter.notifyDataSetChanged()
                 return true
             }
 
