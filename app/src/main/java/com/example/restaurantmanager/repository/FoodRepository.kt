@@ -7,5 +7,6 @@ import java.util.*
 interface FoodRepository {
     fun getListFoods(): Flow<MutableList<Food?>?>
     fun getFood(id: Objects): Flow<Food?>
-    fun addFood(food: Food?) : Flow<Boolean>
+    suspend fun addFood(food: Food?) : Boolean
+    suspend fun delete(nameFood: String): String
 }

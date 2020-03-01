@@ -14,8 +14,7 @@ class FoodRepositoryImp : FoodRepository {
     }
 
     override fun getListFoods(): Flow<MutableList<Food?>?> = foodNetWork.getListFoods()
-
     override fun getFood(id: Objects): Flow<Food?> = foodNetWork.getFood(id)
-
-    override fun addFood(food: Food?) = foodNetWork.addFood(food)
+    override suspend fun addFood(food: Food?) = foodNetWork.addFood(food)
+    override suspend fun delete(nameFood: String) = foodNetWork.delete(nameFood)
 }

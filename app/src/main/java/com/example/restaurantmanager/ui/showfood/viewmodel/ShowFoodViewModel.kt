@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
-class ShowFoodViewModel :ViewModel(){
+class ShowFoodViewModel : ViewModel() {
     private val showFoodUseCase: ShowFoodUseCase by lazy {
         ShowFoodUseCaseImp()
     }
@@ -24,10 +24,20 @@ class ShowFoodViewModel :ViewModel(){
         }
     }
 
+    val checkDelete: MutableLiveData<String?> by lazy {
+        MutableLiveData<String?>(null)
+    }
+
+    fun deleteFood(pos: Int) {
+        viewModelScope.launch {
+            checkDelete.postValue(showFoodUseCase.delete(listFoodToDisplay.value?.get(pos)?.name!!))
+        }
+    }
+
     init {
         viewModelScope.launch {
             showFoodUseCase.getListFoods().flowOn(Dispatchers.IO).collect {
-                if(it != null)
+                if (it != null)
                     listFoodToDisplay.postValue(it)
                 else
                     listFoodToDisplay.postValue(mutableListOf())

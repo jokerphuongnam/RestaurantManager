@@ -18,11 +18,15 @@ data class Food private constructor(
 
     }
 
-    constructor(): this ("", 0, 0, "")
+    constructor() : this("", 0, 0, "")
 
     init {
         this.id = Random.nextInt(1000, 9999)
     }
 
     fun getId(): Int? = id
+
+    companion object {
+        const val NAME = "name"
+    }
 }

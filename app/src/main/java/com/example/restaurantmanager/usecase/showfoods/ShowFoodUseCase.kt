@@ -9,4 +9,5 @@ interface ShowFoodUseCase {
     var foodRepository: FoodRepository
     fun getListFoods(): Flow<MutableList<Food?>?>
     fun getFood(id: Objects): Flow<Food?>
+    suspend fun delete(nameFood: String): String
 }

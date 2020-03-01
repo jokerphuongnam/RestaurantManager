@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface AddFoodUseCase {
     var foodRepository: FoodRepository
-    fun addFood(food: Food?): Flow<Boolean>
+    suspend fun addFood(food: Food?): Boolean
 }

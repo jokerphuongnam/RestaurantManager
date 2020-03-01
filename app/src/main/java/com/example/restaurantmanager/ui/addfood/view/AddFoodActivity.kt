@@ -12,9 +12,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.restaurantmanager.R
 import com.example.restaurantmanager.databinding.ActivityAddFoodBinding
 import com.example.restaurantmanager.ui.addfood.viewmodel.AddFoodViewModel
+import com.example.restaurantmanager.ui.showfood.view.ShowFoodActivity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class AddFoodActivity : AppCompatActivity() {
     companion object {
         const val NAME_FOOD_ADD = "nameFoodAdd"
@@ -80,7 +83,11 @@ class AddFoodActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        setResult(Activity.RESULT_CANCELED)
-        super.onBackPressed()
+        if (!intent.getBooleanExtra(ShowFoodActivity.EMPTY_LIST_DATA, false)) {
+            setResult(Activity.RESULT_CANCELED)
+            super.onBackPressed()
+        } else {
+            Toast.makeText(applicationContext, "No food can't come back", Toast.LENGTH_SHORT).show()
+        }
     }
 }

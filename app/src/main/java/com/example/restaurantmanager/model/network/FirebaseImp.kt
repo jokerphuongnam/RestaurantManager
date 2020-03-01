@@ -6,13 +6,15 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.*
+import kotlin.coroutines.resume
 
+@ExperimentalCoroutinesApi
 class FirebaseImp : FoodNetWork {
     private val db = FirebaseFirestore.getInstance()
 
     @Suppress("NO_REFLECTION_IN_CLASS_PATH")
-    @ExperimentalCoroutinesApi
     override fun getListFoods(): Flow<MutableList<Food?>?> = channelFlow {
         Food::class.simpleName?.let {
             db.collection(it).addSnapshotListener { querySnapshot, e ->
@@ -34,18 +36,27 @@ class FirebaseImp : FoodNetWork {
         }
     }
 
-    @ExperimentalCoroutinesApi
     override fun getFood(id: Objects): Flow<Food?> = channelFlow {
 
     }
 
-    @ExperimentalCoroutinesApi
-    override fun addFood(food: Food?): Flow<Boolean> = channelFlow {
+    override suspend fun addFood(food: Food?) = suspendCancellableCoroutine<Boolean> { cont ->
+        val document = db.collection(Food::class.simpleName!!).document(food?.name!!)
+        document.get().addOnSuccessListener {
+            if (!it.exists()) {
+                document.set(food)
+                cont.resume(true)
+            } else
+                cont.resume(false)
+        }
+    }
+
+    override suspend fun delete(nameFood: String) = suspendCancellableCoroutine<String> { cont ->
         Food::class.simpleName?.let {
-            db.collection(it).add(food!!).addOnSuccessListener {
-                offer(true)
+            db.collection(it).document(nameFood).delete().addOnSuccessListener {
+                cont.resume(nameFood)
             }.addOnFailureListener {
-                offer(false)
+                cont.resume("")
             }
         }
     }

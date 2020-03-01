@@ -14,8 +14,8 @@ class AddFoodViewModel : ViewModel() {
     private val addFoodUseCase: AddFoodUseCase by lazy {
         AddFoodUseCaseImp()
     }
-    val checkSuccessAddFood: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
+    val checkSuccessAddFood: MutableLiveData<Boolean?> by lazy {
+        MutableLiveData<Boolean?>(null)
     }
     val foodToAdd: Food by lazy {
         Food()
@@ -27,9 +27,7 @@ class AddFoodViewModel : ViewModel() {
         foodToAdd.amount = amount.toInt()
         foodToAdd.price = price.toInt()
         viewModelScope.launch {
-            addFoodUseCase.addFood(foodToAdd).collect {
-                checkSuccessAddFood.postValue(it)
-            }
+            checkSuccessAddFood.postValue(addFoodUseCase.addFood(foodToAdd))
         }
     }
 

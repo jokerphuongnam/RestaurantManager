@@ -8,5 +8,5 @@ class AddFoodUseCaseImp private constructor(override var foodRepository: FoodRep
     AddFoodUseCase {
     constructor() : this(FoodRepositoryImp())
 
-    override fun addFood(food: Food?) = foodRepository.addFood(food)
+    override suspend fun addFood(food: Food?) = foodRepository.addFood(food)
 }

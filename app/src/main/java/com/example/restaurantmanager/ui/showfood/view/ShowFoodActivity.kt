@@ -1,5 +1,6 @@
 package com.example.restaurantmanager.ui.showfood.view
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -23,12 +24,13 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class ShowFoodActivity : AppCompatActivity() {
-    private fun toAddActivity() = startActivityForResult(addIntent, ADD_REQUEST_CODE)
+    private fun toAddActivity(emptyList: Boolean) =
+        startActivityForResult(addIntent.putExtra(EMPTY_LIST_DATA, emptyList), ADD_REQUEST_CODE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_show_food)
-        val binding: ActivityShowFoodBinding = DataBindingUtil.setContentView(
+        binding = DataBindingUtil.setContentView(
             this,
             R.layout.activity_show_food
         )
@@ -43,7 +45,7 @@ class ShowFoodActivity : AppCompatActivity() {
                                     "List food be empty will to add food",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                toAddActivity()
+                                toAddActivity(true)
                             } else
                                 submitList(it)
                         })
@@ -52,45 +54,25 @@ class ShowFoodActivity : AppCompatActivity() {
 //                    layoutManager =
 //                        StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
                     layoutManager = LinearLayoutManager(applicationContext)
-                    itemTouchHelper.attachToRecyclerView(this)
+                    //itemTouchHelper.attachToRecyclerView(this)
                 }
                 addFoodBtn.setOnClickListener(toAddFoodActivity)
+                checkDelete.observe(this@ShowFoodActivity, Observer {
+                    if (it != null && it != "") {
+                        Toast.makeText(applicationContext, "Delete $it compelete", Toast.LENGTH_SHORT)
+                            .show()
+                    } else if (it == "") {
+                        Toast.makeText(applicationContext, "Delete fail", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                })
             }
         }
-    }
-
-    companion object {
-        const val ADD_REQUEST_CODE = 1901
-    }
-
-    private val viewModel: ShowFoodViewModel by lazy {
-        ViewModelProvider(this).get(ShowFoodViewModel::class.java)
-    }
-
-    private val addIntent: Intent by lazy {
-        Intent(applicationContext, AddFoodActivity::class.java)
-    }
-
-    private val toAddFoodActivity: View.OnClickListener by lazy {
-        View.OnClickListener {
-            toAddActivity()
-        }
-    }
-    private val showFoodAdapter: ShowFoodAdapter by lazy {
-        ShowFoodAdapter().apply {
-            submitList(viewModel.listFoodToDisplay.value)
-        }
-    }
-    private val itemTouchHelper: ItemTouchHelper by lazy {
         ItemTouchHelper(object :
-            ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun getMovementFlags(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
-            ): Int {
-                return 0
-            }
-
+            ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
             //kéo để di chuyển
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -108,12 +90,53 @@ class ShowFoodActivity : AppCompatActivity() {
 
             //vuốt trái để xoá
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                when (direction){
-                    ItemTouchHelper.LEFT->{
-                        viewModel.listFoodToDisplay.value?.removeAt(viewHolder.adapterPosition)
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        viewModel.deleteFood(viewHolder.position)
                     }
                 }
             }
-        })
+        }).apply {
+            attachToRecyclerView(binding.foodRecycler)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ADD_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(
+                    applicationContext,
+                    "Add food ${data?.getStringExtra(AddFoodActivity.NAME_FOOD_ADD)} success",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    companion object {
+        const val ADD_REQUEST_CODE = 1901
+        const val EMPTY_LIST_DATA = "emptyListData"
+    }
+
+    private lateinit var binding: ActivityShowFoodBinding
+
+    private val viewModel: ShowFoodViewModel by lazy {
+        ViewModelProvider(this).get(ShowFoodViewModel::class.java)
+    }
+
+    private val addIntent: Intent by lazy {
+        Intent(applicationContext, AddFoodActivity::class.java)
+    }
+
+    private val toAddFoodActivity: View.OnClickListener by lazy {
+        View.OnClickListener {
+            toAddActivity(false)
+        }
+    }
+    private val showFoodAdapter: ShowFoodAdapter by lazy {
+        ShowFoodAdapter().apply {
+            submitList(viewModel.listFoodToDisplay.value)
+        }
     }
 }
